@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "it-incident-commander"
+version = "1.0.0"
+description = "YAML-driven incident response CLI for IT teams — runbooks, step tracking, SLA monitoring, and post-incident reports"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Aslam Ahamed", email = "aslamahamed47@gmail.com" }
+]
+keywords = [
+    "incident-response", "itsm", "runbook", "sla", "it-operations",
+    "devops", "cli", "sre", "it-service-management"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.scripts]
+incident = "incident_commander.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/intruderfr/it-incident-commander"
+Repository = "https://github.com/intruderfr/it-incident-commander"
+"Bug Tracker" = "https://github.com/intruderfr/it-incident-commander/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["incident_commander*"]
+
+[tool.setuptools.package-data]
+"*" = ["runbooks/*.yaml", "runbooks/*.yml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
