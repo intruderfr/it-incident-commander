@@ -1,0 +1,90 @@
+name: Security Breach / Compromise
+severity: P1
+category: cybersecurity
+description: >
+  Suspected or confirmed unauthorised access, malware infection, data exfiltration,
+  or account compromise. Follow these steps in sequence. Do NOT skip isolation steps.
+escalation_contact: "CISO / Head of IT / Legal"
+
+steps:
+  - id: confirm-and-triage
+    title: Confirm the incident and assess severity
+    description: >
+      Collect initial indicators: What triggered the alert? What systems/data are affected?
+      Determine if this is an active or historical breach. Assign initial severity.
+    team: Security Team
+    sla_minutes: 10
+
+  - id: preserve-evidence
+    title: Preserve logs and forensic evidence
+    description: >
+      Immediately copy/snapshot: system logs, firewall logs, SIEM alerts, memory dumps.
+      Do NOT reboot the affected system before capturing volatile evidence.
+    team: Security Team
+    sla_minutes: 20
+
+  - id: isolate-systems
+    title: Isolate compromised systems
+    description: >
+      Disconnect affected systems from the network (VLAN isolation or physical disconnect).
+      Revoke active sessions and API tokens for affected accounts.
+      Do NOT power off - preserve forensic evidence in memory.
+    team: Security Team
+    sla_minutes: 30
+
+  - id: notify-management
+    title: Notify management and legal
+    description: >
+      Inform: CISO, Head of IT, Legal, HR (if employee involved).
+      If personal data may be compromised, prepare for regulatory notification (GDPR/etc.).
+    team: Security Team
+    sla_minutes: 35
+
+  - id: change-credentials
+    title: Reset compromised credentials
+    description: >
+      Change passwords for: all affected accounts, service accounts, API keys, SSH keys.
+      Enable MFA if not already active. Invalidate all active sessions.
+    team: Security Team
+    sla_minutes: 45
+
+  - id: block-iocs
+    title: Block indicators of compromise (IoCs)
+    description: >
+      Add malicious IPs, domains, hashes to firewall blocklists, DNS sinkholes, and EDR.
+      Update IDS/IPS signatures. Share IoCs with relevant teams.
+    team: Security Team
+    sla_minutes: 60
+
+  - id: clean-and-restore
+    title: Clean, rebuild, or restore affected systems
+    description: >
+      Wipe and rebuild from known-good image, OR restore from pre-incident backup.
+      Do NOT restore from a backup that may have been taken after the compromise.
+    team: IT Operations
+    sla_minutes: 180
+
+  - id: verify-clean
+    title: Verify systems are clean
+    description: >
+      Run EDR/AV full scan. Review network traffic for residual C2 communication.
+      Verify no persistence mechanisms (scheduled tasks, startup scripts, backdoors).
+    team: Security Team
+    sla_minutes: 240
+
+  - id: regulatory-notification
+    title: Regulatory and customer notification (if applicable)
+    description: >
+      If personal data was accessed, notify the relevant Data Protection Authority
+      within required timeframes (e.g. 72h for GDPR). Prepare customer communication.
+    team: Legal / Compliance
+    sla_minutes: 4320
+    optional: true
+
+  - id: post-incident-review
+    title: Post-incident review and hardening
+    description: >
+      Conduct a blameless PIR within 5 business days. Document: timeline, root cause,
+      attack vector, lessons learned. Raise tickets for all identified security gaps.
+    team: Security Team
+    sla_minutes: 7200
