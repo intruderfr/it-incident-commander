@@ -1,0 +1,73 @@
+name: Network Outage
+severity: P1
+category: networking
+description: >
+  Partial or complete network connectivity loss affecting users or systems.
+  Could be a switch, router, firewall, ISP, or misconfiguration issue.
+escalation_contact: "Network Engineer / ISP NOC"
+
+steps:
+  - id: scope-outage
+    title: Identify the scope of the outage
+    description: >
+      Determine: Is this one user, one floor, one VLAN, one site, or all sites?
+      Check switch/router dashboards. Map which segments are affected.
+    team: Network Team
+    sla_minutes: 5
+
+  - id: check-wan
+    title: Check WAN / ISP connectivity
+    description: >
+      Test from the firewall or core router: can you ping the ISP gateway and 8.8.8.8?
+      Log in to the ISP portal or call ISP NOC if WAN is unreachable.
+    team: Network Team
+    sla_minutes: 10
+
+  - id: check-core-switches
+    title: Inspect core switches and routers
+    description: >
+      Check for interface errors, spanning-tree changes, high CPU/memory.
+      Review interface status: 'show interfaces', 'show ip route', 'show spanning-tree'.
+    team: Network Team
+    sla_minutes: 15
+
+  - id: isolate-fault
+    title: Isolate the faulty component
+    description: >
+      Narrow down to a specific device, cable, or port.
+      Swap suspect cables/SFPs if hardware fault is suspected.
+    team: Network Team
+    sla_minutes: 25
+
+  - id: implement-fix
+    title: Implement the fix or workaround
+    description: >
+      Apply the fix: config rollback, failover to backup link, replace hardware,
+      or re-enable blocked interface. Document every change made.
+    team: Network Team
+    sla_minutes: 40
+
+  - id: verify-connectivity
+    title: Verify full connectivity restoration
+    description: >
+      Test from end-user workstations, servers, and remote sites.
+      Check monitoring dashboards are green. Test critical applications.
+    team: Network Team
+    sla_minutes: 50
+
+  - id: change-record
+    title: Create or update change record
+    description: >
+      Log all config changes in the CMDB/ITSM tool.
+      If an emergency change was applied, file the post-implementation review.
+    team: IT Operations
+    sla_minutes: 60
+    optional: true
+
+  - id: root-cause-analysis
+    title: Document root cause and preventive actions
+    description: >
+      Write the root cause analysis. Raise follow-up tickets for any
+      hardware replacement, firmware updates, or monitoring gaps.
+    team: Network Team
+    sla_minutes: 120
