@@ -1,0 +1,83 @@
+name: Email Service Down
+severity: P2
+category: communication
+description: >
+  Corporate email service (Exchange, Microsoft 365, or Google Workspace) is
+  unavailable or significantly degraded for a substantial number of users.
+escalation_contact: "IT Operations Lead / Microsoft/Google Support"
+
+steps:
+  - id: verify-scope
+    title: Verify scope - is it all users or a subset?
+    description: >
+      Test from multiple devices and locations. Check if the issue affects:
+      all users, a specific domain, a specific mail client, or specific features (e.g. calendar only).
+    team: IT Operations
+    sla_minutes: 5
+
+  - id: check-provider-status
+    title: Check vendor status page
+    description: >
+      For M365: https://admin.microsoft.com > Health > Service Health.
+      For Google Workspace: https://workspace.google.com/status.
+      If provider-side outage, communicate to users and wait for resolution.
+    team: IT Operations
+    sla_minutes: 10
+
+  - id: check-mx-dns
+    title: Check MX and DNS records
+    description: >
+      Verify MX records are resolving correctly: 'dig MX yourdomain.com'.
+      Check for accidental DNS changes. Verify SPF/DKIM/DMARC records are intact.
+    team: IT Operations
+    sla_minutes: 15
+
+  - id: check-mail-server
+    title: Check on-premises mail server (if applicable)
+    description: >
+      Check mail server services are running. Review disk space (queue full?),
+      TLS certificate expiry, antispam gateway status, and transport agent logs.
+    team: IT Operations
+    sla_minutes: 20
+    optional: true
+
+  - id: check-spam-gateway
+    title: Check email security gateway / relay
+    description: >
+      Verify the email gateway (Proofpoint, Mimecast, Barracuda, etc.) is online
+      and not blocking delivery. Check for certificate issues or block-list hits.
+    team: IT Operations
+    sla_minutes: 25
+    optional: true
+
+  - id: apply-fix
+    title: Apply fix or initiate failover
+    description: >
+      Based on root cause: restart services, clear mail queue, renew certificates,
+      revert DNS change, or initiate failover to backup MX.
+    team: IT Operations
+    sla_minutes: 45
+
+  - id: verify-mail-flow
+    title: Verify mail flow is restored
+    description: >
+      Send test emails internally and externally. Verify delivery in both directions.
+      Monitor mail queue depth returning to zero.
+    team: IT Operations
+    sla_minutes: 60
+
+  - id: user-communication
+    title: Communicate resolution to users
+    description: >
+      Notify affected users that email is restored. Include:
+      downtime window, any emails that may have been lost or delayed.
+    team: IT Operations
+    sla_minutes: 70
+
+  - id: document-rca
+    title: Document root cause
+    description: >
+      Record the cause and resolution in the ITSM tool.
+      Raise follow-up tickets for any certificates nearing expiry or DNS hardening.
+    team: IT Operations
+    sla_minutes: 120
