@@ -1,0 +1,70 @@
+name: Server Down
+severity: P1
+category: infrastructure
+description: A production server is unresponsive or offline. Follow these steps to diagnose and restore service.
+escalation_contact: "Head of IT / on-call engineer"
+
+steps:
+  - id: verify-outage
+    title: Verify the outage
+    description: >
+      Confirm the server is actually down. Ping from at least two separate locations.
+      Check monitoring dashboards (Grafana/Zabbix). Rule out monitoring false-positive.
+    team: IT Operations
+    sla_minutes: 5
+
+  - id: notify-stakeholders
+    title: Notify stakeholders
+    description: >
+      Send a brief alert to the service owner, management, and affected teams.
+      Include: what is down, time of detection, initial ETA, your contact.
+    team: IT Operations
+    sla_minutes: 10
+
+  - id: check-console
+    title: Access console / IPMI / hypervisor
+    description: >
+      Connect via IPMI / iDRAC / iLO or hypervisor console (Proxmox / ESXi / virt-manager).
+      Look for kernel panics, OOM messages, or failed disk indicators on screen.
+    team: IT Operations
+    sla_minutes: 15
+
+  - id: check-logs
+    title: Review system logs
+    description: >
+      If the OS is partially responsive, review: /var/log/syslog, dmesg, journalctl -xe.
+      Look for disk errors, OOM kills, segfaults, or service crash loops.
+    team: IT Operations
+    sla_minutes: 20
+
+  - id: attempt-reboot
+    title: Attempt a graceful restart
+    description: >
+      If the cause is identified and safe to restart, perform a graceful reboot.
+      Document the reason before proceeding.
+    team: IT Operations
+    sla_minutes: 30
+
+  - id: restore-services
+    title: Restore and validate services
+    description: >
+      After reboot, confirm all critical services are running.
+      Run smoke tests or health-check endpoints. Verify monitoring is green.
+    team: IT Operations
+    sla_minutes: 45
+
+  - id: root-cause-analysis
+    title: Document root cause
+    description: >
+      Record the root cause and contributing factors. Update the incident log.
+      Open a follow-up ticket for any preventive actions (disk replacement, monitoring tuning).
+    team: IT Operations
+    sla_minutes: 60
+
+  - id: post-incident-comms
+    title: Send all-clear notification
+    description: >
+      Inform stakeholders that the service is restored. Include: downtime duration,
+      root cause summary, next steps.
+    team: IT Operations
+    sla_minutes: 70
